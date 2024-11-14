@@ -19,7 +19,7 @@ class BaseModel:
                 elif key != "__class__":
                     setattr(self, key, value)
         else:
-            self.id = str(uuid.uuid4())
+            self.id = str(uuid.uuid4())  # Unique ID for each instance
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
             from models import storage  # Delayed import to avoid circular dependency
@@ -27,7 +27,7 @@ class BaseModel:
 
     def __str__(self):
         """Returns a string representation of the BaseModel instance."""
-        return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
+        return f"[{self.__class__.__name__}] ({self.id}) {self.to_dict()}"
 
     def save(self):
         """Updates `updated_at` and saves the object in storage."""
@@ -39,6 +39,6 @@ class BaseModel:
         """Returns a dictionary containing all keys/values of the instance."""
         obj_dict = self.__dict__.copy()
         obj_dict["__class__"] = self.__class__.__name__
-        obj_dict["created_at"] = self.created_at.isoformat()
-        obj_dict["updated_at"] = self.updated_at.isoformat()
+        obj_dict["created_at"] = self.created_at.isoformat()  # Serialize created_at as ISO format
+        obj_dict["updated_at"] = self.updated_at.isoformat()  # Serialize updated_at as ISO format
         return obj_dict

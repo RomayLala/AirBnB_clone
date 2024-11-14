@@ -1,6 +1,11 @@
 import json
 from models.base_model import BaseModel
 from models.user import User  # Import the User model
+from models.state import State  # Import the State model
+from models.city import City  # Import the City model
+from models.amenity import Amenity  # Import the Amenity model
+from models.place import Place  # Import the Place model
+from models.review import Review  # Import the Review model
 
 class FileStorage:
     """Class to handle storage of objects to a file in JSON format."""
@@ -41,7 +46,16 @@ class FileStorage:
                     self.new(BaseModel(**value))
                 elif class_name == "User":
                     self.new(User(**value))
-                # Add other classes as needed
+                elif class_name == "State":
+                    self.new(State(**value))
+                elif class_name == "City":
+                    self.new(City(**value))
+                elif class_name == "Amenity":
+                    self.new(Amenity(**value))
+                elif class_name == "Place":
+                    self.new(Place(**value))
+                elif class_name == "Review":
+                    self.new(Review(**value))
         except FileNotFoundError:
             pass  # If the file does not exist, do nothing
         except json.JSONDecodeError:
