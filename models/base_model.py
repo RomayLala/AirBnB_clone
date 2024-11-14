@@ -1,8 +1,6 @@
 #!/usr/bin/python3
 """
 BaseModel module for the AirBnB clone project.
-This module contains the BaseModel class that serves as the base
-class for all other models, handling common attributes and methods.
 """
 
 import uuid
@@ -24,17 +22,18 @@ class BaseModel:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
+            from models import storage  # Delayed import to avoid circular dependency
+            storage.new(self)  # Register the new object in storage
 
     def __str__(self):
         """Returns a string representation of the BaseModel instance."""
-        # Ensure created_at and updated_at are formatted as strings using isoformat
-        created_at_str = self.created_at.isoformat()
-        updated_at_str = self.updated_at.isoformat()
-        return f"[{self.__class__.__name__}] ({self.id}) {{'id': '{self.id}', 'created_at': '{created_at_str}', 'updated_at': '{updated_at_str}'}}"
+        return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
 
     def save(self):
-        """Updates `updated_at` with the current datetime."""
+        """Updates `updated_at` and saves the object in storage."""
         self.updated_at = datetime.now()
+        from models import storage  # Delayed import to avoid circular dependency
+        storage.save()  # Save all objects to the file
 
     def to_dict(self):
         """Returns a dictionary containing all keys/values of the instance."""
