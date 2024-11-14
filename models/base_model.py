@@ -27,7 +27,10 @@ class BaseModel:
 
     def __str__(self):
         """Returns a string representation of the BaseModel instance."""
-        return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
+        # Ensure created_at and updated_at are formatted as strings using isoformat
+        created_at_str = self.created_at.isoformat()
+        updated_at_str = self.updated_at.isoformat()
+        return f"[{self.__class__.__name__}] ({self.id}) {{'id': '{self.id}', 'created_at': '{created_at_str}', 'updated_at': '{updated_at_str}'}}"
 
     def save(self):
         """Updates `updated_at` with the current datetime."""
