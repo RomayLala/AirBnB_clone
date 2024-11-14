@@ -1,11 +1,12 @@
 import json
 from models.base_model import BaseModel
+from models.user import User  # Import the User model
 
 class FileStorage:
     """Class to handle storage of objects to a file in JSON format."""
     
     __file_path = "file.json"  # The path to the JSON file
-    __objects = {}  # This will store all objects by <class name>.id as keys
+    __objects = {}  # Stores all objects by <class name>.id as keys
 
     def all(self):
         """Returns the dictionary of all objects."""
@@ -18,7 +19,6 @@ class FileStorage:
 
     def save(self):
         """Serializes the objects to the JSON file."""
-        # Create a dictionary representation of all objects
         obj_dict = {}
         for key, obj in FileStorage.__objects.items():
             obj_dict[key] = obj.to_dict()  # Convert object to dict
@@ -35,11 +35,14 @@ class FileStorage:
                 obj_dict = json.load(f)
             for key, value in obj_dict.items():
                 class_name = value["__class__"]
-                # Get the class corresponding to the class name in the dictionary
+                
+                # Dynamically recreate the object based on its class
                 if class_name == "BaseModel":
-                    self.new(BaseModel(**value))  # Recreate the object
-                # Add more models here if needed in the future
+                    self.new(BaseModel(**value))
+                elif class_name == "User":
+                    self.new(User(**value))
+                # Add other classes as needed
         except FileNotFoundError:
-            pass  # If the file does not exist, we do nothing
+            pass  # If the file does not exist, do nothing
         except json.JSONDecodeError:
-            pass  # If the file is empty or corrupted, we ignore it
+            pass  # If the file is empty or corrupted, ignore it
